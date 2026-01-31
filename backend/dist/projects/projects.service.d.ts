@@ -9,6 +9,9 @@ export declare class ProjectsService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
+        startDate: Date | null;
+        endDate: Date | null;
+        totalTimeSpent: number;
         ownerId: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, Prisma.PrismaClientOptions>;
     findAll(userId: string): Prisma.PrismaPromise<({
@@ -30,6 +33,9 @@ export declare class ProjectsService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
+        startDate: Date | null;
+        endDate: Date | null;
+        totalTimeSpent: number;
         ownerId: string;
     })[]>;
     findOne(id: string): Prisma.Prisma__ProjectClient<{
@@ -51,6 +57,9 @@ export declare class ProjectsService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
+        startDate: Date | null;
+        endDate: Date | null;
+        totalTimeSpent: number;
         ownerId: string;
     }, null, import("@prisma/client/runtime/library").DefaultArgs, Prisma.PrismaClientOptions>;
     update(id: string, data: Prisma.ProjectUpdateInput): Prisma.Prisma__ProjectClient<{
@@ -59,6 +68,9 @@ export declare class ProjectsService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
+        startDate: Date | null;
+        endDate: Date | null;
+        totalTimeSpent: number;
         ownerId: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, Prisma.PrismaClientOptions>;
     remove(id: string): Prisma.Prisma__ProjectClient<{
@@ -67,6 +79,9 @@ export declare class ProjectsService {
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
+        startDate: Date | null;
+        endDate: Date | null;
+        totalTimeSpent: number;
         ownerId: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, Prisma.PrismaClientOptions>;
 }

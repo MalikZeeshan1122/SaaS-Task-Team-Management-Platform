@@ -22,6 +22,9 @@ export declare class TasksService {
             createdAt: Date;
             updatedAt: Date;
             description: string | null;
+            startDate: Date | null;
+            endDate: Date | null;
+            totalTimeSpent: number;
             ownerId: string;
         };
         assignee: {
@@ -52,6 +55,9 @@ export declare class TasksService {
             createdAt: Date;
             updatedAt: Date;
             description: string | null;
+            startDate: Date | null;
+            endDate: Date | null;
+            totalTimeSpent: number;
             ownerId: string;
         };
         assignee: {

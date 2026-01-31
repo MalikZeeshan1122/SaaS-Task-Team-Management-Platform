@@ -1,6 +1,6 @@
 import requests
 
-API_URL = "http://localhost:3001"
+API_URL = "http://localhost:3004"
 
 def test_flow():
     email = "test@example.com"

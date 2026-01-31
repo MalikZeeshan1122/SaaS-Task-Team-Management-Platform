@@ -5,20 +5,42 @@ import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import KanbanBoard from '../../../components/KanbanBoard';
 
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, DialogFooter } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Button } from '@/components/ui/button';
+import { Pencil } from 'lucide-react';
+
 export default function ProjectDetails() {
     const { id } = useParams();
     const [project, setProject] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [view, setView] = useState<'list' | 'board'>('board');
+    const [isEditing, setIsEditing] = useState(false);
+    const [editForm, setEditForm] = useState({ name: '', description: '' });
 
     useEffect(() => {
         if (id) {
             api.get(`/projects/${id}`)
-                .then((res) => setProject(res.data))
+                .then((res) => {
+                    setProject(res.data);
+                    setEditForm({ name: res.data.name, description: res.data.description || '' });
+                })
                 .catch((err) => console.error(err))
                 .finally(() => setLoading(false));
         }
     }, [id]);
+
+    const handleUpdateProject = async () => {
+        try {
+            const res = await api.patch(`/projects/${id}`, editForm);
+            setProject(res.data);
+            setIsEditing(false);
+        } catch (err) {
+            console.error(err);
+            alert('Failed to update project');
+        }
+    };
 
     if (loading) return <div className="p-6 text-gray-600">Loading...</div>;
     if (!project) return <div className="p-6 text-red-500">Project not found</div>;
@@ -57,7 +79,43 @@ export default function ProjectDetails() {
             <div className="flex justify-between items-center mb-6">
                 <div>
                     <Link href="/dashboard" className="text-gray-500 hover:text-gray-700 mb-2 inline-block text-sm">&larr; Back to Dashboard</Link>
-                    <h1 className="text-4xl font-bold text-gray-900">{project.name}</h1>
+                    <div className="flex items-center gap-3">
+                        <h1 className="text-4xl font-bold text-gray-900">{project.name}</h1>
+                        <Dialog open={isEditing} onOpenChange={setIsEditing}>
+                            <DialogTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8">
+                                    <Pencil className="h-4 w-4" />
+                                </Button>
+                            </DialogTrigger>
+                            <DialogContent>
+                                <DialogHeader>
+                                    <DialogTitle>Edit Project</DialogTitle>
+                                </DialogHeader>
+                                <div className="grid gap-4 py-4">
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="name">Name</Label>
+                                        <Input
+                                            id="name"
+                                            value={editForm.name}
+                                            onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+                                        />
+                                    </div>
+                                    <div className="grid gap-2">
+                                        <Label htmlFor="description">Description</Label>
+                                        <Input
+                                            id="description"
+                                            value={editForm.description}
+                                            onChange={(e) => setEditForm({ ...editForm, description: e.target.value })}
+                                        />
+                                    </div>
+                                </div>
+                                <DialogFooter>
+                                    <Button variant="outline" onClick={() => setIsEditing(false)}>Cancel</Button>
+                                    <Button onClick={handleUpdateProject}>Save Changes</Button>
+                                </DialogFooter>
+                            </DialogContent>
+                        </Dialog>
+                    </div>
                     <p className="text-gray-500 mt-1">{project.description}</p>
                 </div>
                 <div className="flex gap-2">

@@ -77,10 +77,12 @@ export default function Dashboard() {
                         </p>
                     </div>
                     <div className="flex items-center gap-4">
-                        <Button variant="outline" className="hidden sm:flex">
-                            <BarChart3 className="mr-2 h-4 w-4" />
-                            View Reports
-                        </Button>
+                        <Link href="/reports">
+                            <Button variant="outline" className="hidden sm:flex">
+                                <BarChart3 className="mr-2 h-4 w-4" />
+                                View Reports
+                            </Button>
+                        </Link>
                         <Link href="/projects/new">
                             <Button className="bg-blue-600 hover:bg-blue-700 text-white shadow-lg shadow-blue-500/20 transition-all hover:scale-105">
                                 <Plus className="mr-2 h-4 w-4" />

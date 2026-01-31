@@ -6,6 +6,9 @@ import { useRouter } from 'next/navigation';
 export default function NewProject() {
     const [name, setName] = useState('');
     const [description, setDescription] = useState('');
+    const [startDate, setStartDate] = useState('');
+    const [endDate, setEndDate] = useState('');
+    const [totalTimeSpent, setTotalTimeSpent] = useState(0);
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
@@ -13,7 +16,13 @@ export default function NewProject() {
         e.preventDefault();
         setLoading(true);
         try {
-            await api.post('/projects', { name, description });
+            await api.post('/projects', { 
+                name, 
+                description,
+                startDate: startDate ? new Date(startDate) : null,
+                endDate: endDate ? new Date(endDate) : null,
+                totalTimeSpent
+            });
             router.push('/dashboard');
         } catch (err) {
             console.error(err);
@@ -36,6 +45,36 @@ export default function NewProject() {
                             onChange={(e) => setName(e.target.value)}
                             className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
                             required
+                        />
+                    </div>
+                    <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                            <label className="block text-gray-700 text-sm font-bold mb-2">Start Date</label>
+                            <input
+                                type="date"
+                                value={startDate}
+                                onChange={(e) => setStartDate(e.target.value)}
+                                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                            />
+                        </div>
+                        <div>
+                            <label className="block text-gray-700 text-sm font-bold mb-2">End Date</label>
+                            <input
+                                type="date"
+                                value={endDate}
+                                onChange={(e) => setEndDate(e.target.value)}
+                                className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                            />
+                        </div>
+                    </div>
+                    <div className="mb-4">
+                        <label className="block text-gray-700 text-sm font-bold mb-2">Estimated Time (Minutes)</label>
+                        <input
+                            type="number"
+                            value={totalTimeSpent}
+                            onChange={(e) => setTotalTimeSpent(parseInt(e.target.value) || 0)}
+                            className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-gray-800"
+                            min="0"
                         />
                     </div>
                     <div className="mb-6">
