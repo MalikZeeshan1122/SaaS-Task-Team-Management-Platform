@@ -81,7 +81,7 @@ export default function ProjectDetails() {
 
             {view === 'board' ? (
                 <div className="flex-1 overflow-hidden">
-                    <KanbanBoard tasks={project.tasks || []} onTaskUpdate={handleTaskUpdate} onDeleteTask={handleDeleteTask} />
+                    <KanbanBoard tasks={project.tasks || []} onTaskUpdate={handleTaskUpdate} onDeleteTask={handleDeleteTask} projectId={project.id} />
                 </div>
             ) : (
                 <div className="space-y-3">

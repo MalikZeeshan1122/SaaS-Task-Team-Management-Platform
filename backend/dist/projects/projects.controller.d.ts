@@ -3,14 +3,14 @@ import { Prisma } from '@prisma/client';
 export declare class ProjectsController {
     private readonly projectsService;
     constructor(projectsService: ProjectsService);
-    create(createProjectDto: any, req: any): Prisma.Prisma__ProjectClient<{
-        name: string;
+    create(createProjectDto: any, req: any): Promise<{
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
         ownerId: string;
-    }, never, import("@prisma/client/runtime/library").DefaultArgs, Prisma.PrismaClientOptions>;
+    }>;
     findAll(req: any): Prisma.PrismaPromise<({
         tasks: {
             id: string;
@@ -21,12 +21,12 @@ export declare class ProjectsController {
             status: import(".prisma/client").$Enums.Status;
             priority: import(".prisma/client").$Enums.Priority;
             projectId: string;
-            assigneeId: string | null;
             creatorId: string;
+            assigneeId: string | null;
         }[];
     } & {
-        name: string;
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
@@ -42,28 +42,28 @@ export declare class ProjectsController {
             status: import(".prisma/client").$Enums.Status;
             priority: import(".prisma/client").$Enums.Priority;
             projectId: string;
-            assigneeId: string | null;
             creatorId: string;
+            assigneeId: string | null;
         }[];
     } & {
-        name: string;
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
         ownerId: string;
     }, null, import("@prisma/client/runtime/library").DefaultArgs, Prisma.PrismaClientOptions>;
     update(id: string, updateProjectDto: Prisma.ProjectUpdateInput): Prisma.Prisma__ProjectClient<{
-        name: string;
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;
         ownerId: string;
     }, never, import("@prisma/client/runtime/library").DefaultArgs, Prisma.PrismaClientOptions>;
     remove(id: string): Prisma.Prisma__ProjectClient<{
-        name: string;
         id: string;
+        name: string;
         createdAt: Date;
         updatedAt: Date;
         description: string | null;

@@ -21,11 +21,17 @@ let ProjectsController = class ProjectsController {
     constructor(projectsService) {
         this.projectsService = projectsService;
     }
-    create(createProjectDto, req) {
-        return this.projectsService.create({
-            ...createProjectDto,
-            owner: { connect: { id: req.user.userId } },
-        });
+    async create(createProjectDto, req) {
+        try {
+            return await this.projectsService.create({
+                ...createProjectDto,
+                owner: { connect: { id: req.user.userId } },
+            });
+        }
+        catch (error) {
+            console.error('Error creating project:', error);
+            throw new Error(`Failed to create project: ${error.message}`);
+        }
     }
     findAll(req) {
         return this.projectsService.findAll(req.user.userId);
@@ -47,7 +53,7 @@ __decorate([
     __param(1, (0, common_1.Request)()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object, Object]),
-    __metadata("design:returntype", void 0)
+    __metadata("design:returntype", Promise)
 ], ProjectsController.prototype, "create", null);
 __decorate([
     (0, common_1.Get)(),
