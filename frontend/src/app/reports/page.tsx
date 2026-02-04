@@ -57,12 +57,18 @@ export default function ReportsPage() {
         : 1;
 
     return (
-        <div className="min-h-screen bg-gray-50/50 dark:bg-background p-8">
+        <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-indigo-50 dark:from-gray-950 dark:via-gray-900 dark:to-indigo-950 p-6 md:p-8">
+            {/* Subtle background decoration */}
+            <div className="fixed inset-0 overflow-hidden pointer-events-none">
+                <div className="absolute top-0 right-0 w-[600px] h-[600px] bg-gradient-to-br from-indigo-500/5 to-violet-500/5 rounded-full blur-3xl" />
+                <div className="absolute bottom-0 left-0 w-[500px] h-[500px] bg-gradient-to-tr from-emerald-500/5 to-cyan-500/5 rounded-full blur-3xl" />
+            </div>
+
             <motion.div
                 initial="hidden"
                 animate="show"
                 variants={container}
-                className="max-w-7xl mx-auto space-y-8"
+                className="relative z-10 max-w-7xl mx-auto space-y-8"
             >
                 {/* Header */}
                 <motion.div variants={item} className="flex items-center gap-4">
@@ -168,7 +174,7 @@ export default function ReportsPage() {
                                                             initial={{ height: 0 }}
                                                             animate={{ height: `${(stat.count / maxCount) * 100}%` }}
                                                             transition={{ duration: 0.5, delay: idx * 0.1 }}
-                                                            className="w-full max-w-[40px] bg-blue-500 rounded-t-lg group-hover:bg-blue-600 transition-colors relative"
+                                                            className="w-full max-w-[40px] bg-gradient-to-t from-indigo-600 to-violet-500 rounded-t-lg group-hover:from-indigo-500 group-hover:to-violet-400 transition-all relative shadow-lg shadow-indigo-500/20"
                                                         >
                                                             <div className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-900 text-white text-xs py-1 px-2 rounded opacity-0 group-hover:opacity-100 transition-opacity">
                                                                 {stat.count}
