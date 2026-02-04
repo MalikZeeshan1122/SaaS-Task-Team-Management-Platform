@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -8,15 +8,18 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
-    ArrowLeft, User, Mail, Lock, Save, Shield, Bell, Palette,
-    LogOut, Loader2, CheckCircle, AlertTriangle
+    ArrowLeft, User, Mail, Lock, Save, Shield, Camera,
+    LogOut, Loader2, CheckCircle, AlertTriangle, Upload
 } from 'lucide-react';
 
 export default function SettingsPage() {
     const router = useRouter();
+    const fileInputRef = useRef<HTMLInputElement>(null);
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
+    const [uploadingAvatar, setUploadingAvatar] = useState(false);
     const [success, setSuccess] = useState('');
     const [error, setError] = useState('');
     const [user, setUser] = useState<any>(null);
@@ -56,16 +59,50 @@ export default function SettingsPage() {
         setSuccess('');
 
         try {
-            await api.patch('/users/me', {
+            const res = await api.patch('/users/me', {
                 name: formData.name,
                 email: formData.email
             });
+            setUser(res.data);
             setSuccess('Profile updated successfully!');
             setTimeout(() => setSuccess(''), 3000);
         } catch (err: any) {
             setError(err.response?.data?.message || 'Failed to update profile');
         } finally {
             setSaving(false);
+        }
+    };
+
+    const handleAvatarUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+        const file = e.target.files?.[0];
+        if (!file) return;
+
+        // Validate file size (5MB max)
+        if (file.size > 5 * 1024 * 1024) {
+            setError('Image must be less than 5MB');
+            return;
+        }
+
+        setUploadingAvatar(true);
+        setError('');
+        setSuccess('');
+
+        try {
+            const formData = new FormData();
+            formData.append('avatar', file);
+
+            const res = await api.patch('/users/me/avatar', formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            setUser(res.data);
+            setSuccess('Profile picture updated!');
+            setTimeout(() => setSuccess(''), 3000);
+        } catch (err: any) {
+            setError(err.response?.data?.message || 'Failed to upload image');
+        } finally {
+            setUploadingAvatar(false);
         }
     };
 
@@ -104,6 +141,16 @@ export default function SettingsPage() {
     const handleSignOut = () => {
         localStorage.removeItem('token');
         router.push('/login');
+    };
+
+    const getAvatarUrl = () => {
+        if (user?.avatarUrl) {
+            // If avatar URL starts with /, prepend the API base URL
+            return user.avatarUrl.startsWith('/')
+                ? `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001'}${user.avatarUrl}`
+                : user.avatarUrl;
+        }
+        return null;
     };
 
     if (loading) {
@@ -179,6 +226,60 @@ export default function SettingsPage() {
                 )}
 
                 <div className="grid gap-6">
+                    {/* Avatar Section */}
+                    <motion.div
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: 0.05 }}
+                    >
+                        <Card className="glass-card border-0 shadow-xl">
+                            <CardHeader>
+                                <CardTitle className="flex items-center gap-2">
+                                    <Camera className="h-5 w-5 text-indigo-600" />
+                                    Profile Picture
+                                </CardTitle>
+                                <CardDescription>Upload a photo for your profile</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <div className="flex items-center gap-6">
+                                    <div className="relative group">
+                                        <Avatar className="h-24 w-24 ring-4 ring-indigo-100 dark:ring-indigo-900/50 transition-all group-hover:ring-indigo-300">
+                                            <AvatarImage src={getAvatarUrl() || undefined} alt={user?.name} />
+                                            <AvatarFallback className="bg-gradient-to-br from-indigo-100 to-violet-100 text-indigo-700 dark:from-indigo-900 dark:to-violet-900 dark:text-indigo-200 text-2xl font-bold">
+                                                {user?.name?.substring(0, 2).toUpperCase() || 'U'}
+                                            </AvatarFallback>
+                                        </Avatar>
+                                        {uploadingAvatar && (
+                                            <div className="absolute inset-0 bg-black/50 rounded-full flex items-center justify-center">
+                                                <Loader2 className="h-8 w-8 text-white animate-spin" />
+                                            </div>
+                                        )}
+                                    </div>
+                                    <div className="space-y-3">
+                                        <input
+                                            ref={fileInputRef}
+                                            type="file"
+                                            accept="image/*"
+                                            onChange={handleAvatarUpload}
+                                            className="hidden"
+                                        />
+                                        <Button
+                                            onClick={() => fileInputRef.current?.click()}
+                                            disabled={uploadingAvatar}
+                                            className="bg-gradient-to-r from-indigo-600 to-violet-600 hover:from-indigo-700 hover:to-violet-700 text-white"
+                                        >
+                                            <Upload className="h-4 w-4 mr-2" />
+                                            Upload New Photo
+                                        </Button>
+                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                            JPG, PNG or GIF. Max 5MB.
+                                        </p>
+                                    </div>
+                                </div>
+                            </CardContent>
+                        </Card>
+                    </motion.div>
+
                     {/* Profile Section */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}

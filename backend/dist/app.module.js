@@ -15,12 +15,13 @@ const projects_module_1 = require("./projects/projects.module");
 const tasks_module_1 = require("./tasks/tasks.module");
 const auth_module_1 = require("./auth/auth.module");
 const prisma_module_1 = require("./prisma/prisma.module");
+const analytics_module_1 = require("./analytics/analytics.module");
 let AppModule = class AppModule {
 };
 exports.AppModule = AppModule;
 exports.AppModule = AppModule = __decorate([
     (0, common_1.Module)({
-        imports: [users_module_1.UsersModule, projects_module_1.ProjectsModule, tasks_module_1.TasksModule, auth_module_1.AuthModule, prisma_module_1.PrismaModule],
+        imports: [users_module_1.UsersModule, projects_module_1.ProjectsModule, tasks_module_1.TasksModule, auth_module_1.AuthModule, prisma_module_1.PrismaModule, analytics_module_1.AnalyticsModule],
         controllers: [app_controller_1.AppController],
         providers: [app_service_1.AppService],
     })

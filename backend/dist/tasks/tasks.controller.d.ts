@@ -32,6 +32,7 @@ export declare class TasksController {
             id: string;
             email: string;
             password: string;
+            avatarUrl: string | null;
             role: import(".prisma/client").$Enums.Role;
             createdAt: Date;
             updatedAt: Date;
@@ -65,6 +66,7 @@ export declare class TasksController {
             id: string;
             email: string;
             password: string;
+            avatarUrl: string | null;
             role: import(".prisma/client").$Enums.Role;
             createdAt: Date;
             updatedAt: Date;
